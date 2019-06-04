@@ -5,6 +5,7 @@ const cfg = require('./config.json');
 bot.on('ready', () => {
 	console.log('I\'m ready!');
 	bot.user.setActivity('on GarGar\'s PC');
+
 })
 
 bot.on('message', msg => {
@@ -13,7 +14,12 @@ bot.on('message', msg => {
 	}
 
 	console.log(msg.author.username + ': ' + msg.content);
+})
 
+bot.on("presenceUpdate", (oldMember, newMember) => {
+	if (newMember.presence.game.streaming === true) {
+		//bot.channels.get()
+	}
 })
 
 bot.login(cfg.token)

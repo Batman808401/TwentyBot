@@ -7,7 +7,6 @@ bot.on('ready', () => {
 
 	//be sure to put your identification in the user property of config.json
 	bot.user.setActivity('on '+ cfg.user +'\'s PC');
-
 })
 
 bot.on('message', msg => {
@@ -20,7 +19,6 @@ bot.on('message', msg => {
 
 //event when any user changes their presence
 bot.on("presenceUpdate", (oldMember, newMember) => {
-
 	//A string that gives the User and their discord status
 	const generalStatus = newMember.displayName + " is now " + newMember.presence.status;
 
@@ -42,7 +40,6 @@ bot.on("presenceUpdate", (oldMember, newMember) => {
 			console.log(generalStatus);
 		}
 	}
-
 })
 
 bot.login(cfg.token)

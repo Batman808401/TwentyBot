@@ -1,10 +1,10 @@
 const { Client } = require('discord.js');
 const bot = new Client();
-const cfg = require('./config.json');
+const cfg = require('../config.json');
 
 bot.on('ready', () => {
 	console.log('I\'m ready!');
-	bot.user.setActivity('on GarGar\'s PC');
+	bot.user.setActivity('on '+ cfg.user +'\'s PC');
 
 })
 

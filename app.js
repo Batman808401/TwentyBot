@@ -4,6 +4,8 @@ const cfg = require('../config.json');
 
 bot.on('ready', () => {
 	console.log('I\'m ready!');
+
+	//be sure to put your identification in the user property of config.json
 	bot.user.setActivity('on '+ cfg.user +'\'s PC');
 
 })

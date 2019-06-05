@@ -1,2 +1,2 @@
-- Alert users when a QUAD member is livestreaming
+- ~~Alert users when a member is livestreaming~~
 - Restrict vc-text to voice channel users only

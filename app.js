@@ -22,14 +22,14 @@ bot.on("presenceUpdate", (oldMember, newMember) => {
 	//A string that gives the User and their discord status
 	const generalStatus = newMember.displayName + " is now " + newMember.presence.status;
 
-	//check if User went offline
-	if (newMember.presence.status === "offline") {
+	//check if User went offline or something
+	if (newMember.presence.game === null) {
 		console.log(generalStatus)
 	} else {
 		//Check if the user is streaming
 		if (newMember.presence.game.streaming == true) {
 			//if the user is streaming
-			bot.channels.get("585613596134735874").send(newMember.displayName + " is now live!")
+			bot.channels.get("585613596134735874").send("@everyone " + newMember.displayName + " is now live!")
 		} else {
 			//state the status of the user
 			console.log(generalStatus);

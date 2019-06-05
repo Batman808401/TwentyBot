@@ -29,7 +29,7 @@ bot.on("presenceUpdate", (oldMember, newMember) => {
 		//Check if the user is streaming
 		if (newMember.presence.game.streaming == true) {
 			//if the user is streaming
-			bot.channels.get("585613596134735874").send("@everyone " + newMember.displayName + " is now live!")
+			bot.channels.get("585613596134735874").send("@everyone @" + newMember.user.tag + " is now live!")
 		} else {
 			//state the status of the user
 			console.log(generalStatus);

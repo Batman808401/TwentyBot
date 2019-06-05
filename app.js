@@ -17,8 +17,10 @@ bot.on('message', msg => {
 })
 
 bot.on("presenceUpdate", (oldMember, newMember) => {
-	if (newMember.presence.game.streaming === true) {
+	if (newMember.presence.game.streaming == true) {
 		bot.channels.get("585613596134735874").send(newMember.displayName + " is now live!")
+	} else {
+		console.log(newMember.displayName + " is not streaming");
 	}
 })
 

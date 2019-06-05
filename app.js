@@ -30,10 +30,10 @@ bot.on("presenceUpdate", (oldMember, newMember) => {
 		if (newMember.presence.game.streaming === true) {
 			//check if this person has been streaming
 			if (newMember.user.tag === oldMember.user.tag) {
-				bot.channels.get("585613596134735874").send("@" + newMember.user.tag + " changed their stream name to " + newMember.presence.game.name);
+				bot.channels.get("585613596134735874").send("<@!" + newMember.id + "> changed their stream name to: " + newMember.presence.game.name);
 			} else {
 				//A new stream has started
-				bot.channels.get("585613596134735874").send("@everyone @" + newMember.user.tag + " is now live! \n" + newMember.nickname + ": " + newMember.presence.game.name);
+				bot.channels.get("585613596134735874").send("@everyone <@!" + newMember.id + "> is now live! \n" + newMember.nickname + ": " + newMember.presence.game.name);
 			}
 		} else {
 			//state the status of the user

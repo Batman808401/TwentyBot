@@ -77,4 +77,15 @@ bot.on("presenceUpdate", (oldMember, newMember) => {
 
 })
 
+//Add and removes a role that allows the user to type in vc-text
+bot.on("voiceStateUpdate", (oldMember,newMember) => {
+	if (newMember.voiceChannel == null) {
+		console.log(newMember.displayName + " left VC.")
+		newMember.removeRole('640311067485929476').catch(console.error)
+	} else {
+		console.log(newMember.displayName + " is in VC.")
+		newMember.addRole('640311067485929476').catch(console.error)
+	}
+})
+
 bot.login(cfg.token)

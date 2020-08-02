@@ -1,23 +1,39 @@
 const { Client } = require('discord.js');
 const readline = require("readline");
-const bot = new Client();
 const cfg = require('../config.json');
-
-bot.on('ready', () => {
-	console.log('I\'m ready!');
-
-	//be sure to put your identification in the user property of config.json
-	bot.user.setActivity('on '+ cfg.user +'\'s PC');
-})
+const chalk = require('chalk');
+let stream = [];
 
 const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout
 })
+const constructPrompt = (msg) => {
+	let tmp = "";
+	for (i = 0; i < stream.length; i++) {
+		tmp += stream[i];
+	}
+	return tmp;
+}
+const post = (msg) => {
+	stream.push(msg + '\n');
+	tmp = constructPrompt(msg);
+	rl.setPrompt(tmp);
+	chalk.red(rl.prompt(1));
+	//console.log(tmp);
+}
+const bot = new Client();
+
+bot.on('ready', () => {
+	console.log(chalk.green('I\'m ready!\n'));
+
+	//be sure to put your identification in the user property of config.json
+	bot.user.setActivity('on '+ cfg.user +'\'s PC');
+})
 
 //console commands
 rl.on('line', (input) => {
-
+	stream = [];
 	const origMsg = `${input}`;
 	var command = origMsg.split(' ')[0].toLowerCase();
 	var attribute = origMsg.substr(origMsg.indexOf(' ')+1);
@@ -25,9 +41,8 @@ rl.on('line', (input) => {
 	if (command=="say") {
 		bot.channels.get('511380337993973775').send(attribute);
 	} else {
-		console.log("\""+command+"\" is not a valid command")
+		post("\""+command+"\" is not a valid command");
 	}
-
 })
 
 //event when messages are sent through 20 QUAD
@@ -41,13 +56,24 @@ bot.on('message', msg => {
 	if (origMsg[0] == "!" && !msg.author.bot) {
 		if (cmd == "mimic") {
 			bot.channels.get('511380337993973775').send(attribute);
+		} else if (cmd == "active") {
+			if (msg.member.roles.find(r => r.name === "Active")) {
+				msg.member.removeRole('566427859606962186').catch(console.error);
+				bot.channels.get('511380337993973775').send("You no longer have the `Active` role");
+			} else {
+				msg.member.addRole('566427859606962186').catch(console.error);
+				bot.channels.get('511380337993973775').send('You now hove the `active` role');
+			}
 		} else {
 			bot.channels.get('511380337993973775').send("\""+command+"\" is not a valid command");
 		}
 	}
 
+	//bot.fetchUser(id)
+	
 	//logs users and their message
-	console.log(msg.author.username + ': ' + msg.content);
+	//console.log(msg.author.username + ': ' + msg.content);
+	post(msg.author.username + ': ' + msg.content);
 })
 
 //event when any user changes their presence
@@ -58,20 +84,16 @@ bot.on("presenceUpdate", (oldMember, newMember) => {
 
 	//check if User went offline or something
 	if (newMember.presence.game === null) {
-		console.log(generalStatus)
+		post(generalStatus);
+		//console.log(generalStatus)
 	} else {
 		//Check if the user is streaming
 		if (newMember.presence.game.streaming === true) {
-			//check if this person has been streaming
-			if (newMember.user.tag === oldMember.user.tag && oldMember.presence.game.streaming === true) {
-				bot.channels.get("585613596134735874").send("<@!" + newMember.id + "> changed their stream name to: " + newMember.presence.game.name);
-			} else {
-				//A new stream has started
-				bot.channels.get("585613596134735874").send("<@!" + newMember.id + "> is now live! \n" + newMember.nickname + ": " + newMember.presence.game.name);
-			}
+			bot.channels.get("585613596134735874").send("<@!" + newMember.id + "> is now live! \n" + newMember.nickname + ": " + newMember.presence.game.name);
 		} else {
 			//state the status of the user
-			console.log(generalStatus);
+			post(generalStatus);
+			//console.log(generalStatus);
 		}
 	}
 

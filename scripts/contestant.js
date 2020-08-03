@@ -31,7 +31,7 @@ class Contestant {
 		return this.id;
 	}
 	setSubmissionURL(url) {
-		this.setSubmissionURL(url);
+		this.submissionURL = url;
 	}
 	getSubmissionURL() {
 		return this.submissionURL;

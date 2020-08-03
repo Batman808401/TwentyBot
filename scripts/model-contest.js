@@ -35,9 +35,12 @@ class Contest {
 			}
 		}
 	}
-	setUserSubmit(userId, messageId, url) {
+	setUserSubmit(userId, messageId) {
 		let contestant = this.getUser(userId);
 		contestant.setSubmission(messageId);
+	}
+	setUserSubmitURL(userId, url) {
+		let contestant = this.getUser(userId);
 		contestant.setSubmissionURL(url);
 	}
 	getUser(userId) {

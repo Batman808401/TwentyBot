@@ -75,14 +75,19 @@ bot.on('message', msg => {
 				break;
 			case 'contestants':
 				let users = modelContest.getUsers();
-				let temp = '';
+				/*let temp = '';
 				for (let user of users) {
 					temp += `${user.name} `
-				}
-				spamChannel.send(temp);
+				}*/
+				spamChannel.send(JSON.stringify(users));
+				break;
+			case 'submit':
+				const url = attribute.substr(attribute.indexOf(' ')+1);
+				const id = attribute.split(' ')[0];
+				modelContest.setUserSubmitURL(id, url);
 				break;
 			default:
-				spamChannel.send(`"${msg}" is not a valid command`)
+				spamChannel.send(`"${cmd}" is not a valid command`)
 				break;
 		}
 	}

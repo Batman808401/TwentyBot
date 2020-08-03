@@ -5,28 +5,28 @@ class Contestant {
 		this.votes = 0;
 		this.submission = "";
 	}
-	set vote(votes) {
+	setVote(votes) {
 		this.votes = votes;
 	}
-	set submission(submission) {
+	setSubmission(submission) {
 		this.submission = submission;
 	}
-	set name(name) {
+	setName(name) {
 		this.name = name;
 	}
-	set id(id) {
+	setId(id) {
 		this.id = id;
 	}
-	get vote() {
+	vote() {
 		return this.votes;
 	}
-	get submission() {
+	submission() {
 		return this.submission;
 	}
-	get name() {
+	name() {
 		return this.name;
 	}
-	get id() {
+	id() {
 		return this.id;
 	}
 }

@@ -44,13 +44,38 @@ bot.on('message', msg => {
 
 	const spamChannel = bot.channels.cache.get('511380337993973775');
 
+	//check for a command and if the command is from a human
 	if (origMsg[0] == "!" && !msg.author.bot) {
 		switch (cmd) {
 			case 'mimic':
 				spamChannel.send(attribute);
 				break;
 			case 'add':
-				//add a contestant to the contest
+				/*const addToContest = async () => {
+					let user = await bot.users.fetch(attribute).catch(e => {
+						return null;
+					});
+					if (user === null) {
+						spamChannel.send(`"${attribute}" is not a user`);
+					} else {
+						modelContest.addContestant(user.username, user.id);
+						spamChannel.send(`${user.username} has been added to the contest`);
+						msg.delete({timeout: 1000});
+					}
+				}
+				addToContest();*/
+
+				const addToContest = async () => {
+					let user = await bot.users.fetch(attribute).catch(e => {
+						return null;
+					});
+					if (user === null) {
+						spamChannel.send(`"${attribute}" is not a user`);
+					} else {
+						return bot.users.resolve(user);
+					}
+				}
+				console.log(addToContest());
 				break;
 			default:
 				spamChannel.send(`"${msg}" is not a valid command`)

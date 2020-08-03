@@ -2,6 +2,9 @@ const { Client } = require('discord.js');
 const readline = require("readline");
 const bot = new Client();
 const cfg = require('../config.json');
+const Contest = require('./scripts/model-contest.js');
+
+const modelContest = new Contest();
 
 bot.on('ready', () => {
 	console.log('I\'m ready!');
@@ -23,7 +26,7 @@ rl.on('line', (input) => {
 	var attribute = origMsg.substr(origMsg.indexOf(' ')+1);
 
 	if (command=="say") {
-		bot.channels.get('511380337993973775').send(attribute);
+		bot.channels.fetch('511380337993973775').send(attribute);
 	} else {
 		console.log("\""+command+"\" is not a valid command")
 	}
@@ -33,16 +36,24 @@ rl.on('line', (input) => {
 //event when messages are sent through 20 QUAD
 bot.on('message', msg => {
 
+	//parse the message for a command and attribute
 	const origMsg = msg.content;
 	const attribute = origMsg.substr(origMsg.indexOf(' ')+1);
 	const command = origMsg.split(' ')[0].toLowerCase();
-	const cmd = command.substr(command.indexOf("!")+1)
+	const cmd = command.substr(command.indexOf("!")+1);
+
+	const spamChannel = bot.channels.cache.get('511380337993973775');
 
 	if (origMsg[0] == "!" && !msg.author.bot) {
-		if (cmd == "mimic") {
-			bot.channels.get('511380337993973775').send(attribute);
-		} else {
-			bot.channels.get('511380337993973775').send("\""+command+"\" is not a valid command");
+		switch (cmd) {
+			case 'mimic':
+				spamChannel.send(attribute);
+				break;
+			case 'add':
+				//add a contestant to the contest
+				break;
+			default:
+				spamChannel.send(`"${msg}" is not a valid command`)
 		}
 	}
 
@@ -51,40 +62,22 @@ bot.on('message', msg => {
 })
 
 //event when any user changes their presence
-bot.on("presenceUpdate", (oldMember, newMember) => {
+bot.on("presenceUpdate", (oldPresence, newPresence) => {
 
 	//A string that gives the User and their discord status
-	const generalStatus = newMember.displayName + " is now " + newMember.presence.status;
-
-	//check if User went offline or something
-	if (newMember.presence.game === null) {
-		console.log(generalStatus)
-	} else {
-		//Check if the user is streaming
-		if (newMember.presence.game.streaming === true) {
-			//check if this person has been streaming
-			if (newMember.user.tag === oldMember.user.tag && oldMember.presence.game.streaming === true) {
-				bot.channels.get("585613596134735874").send("<@!" + newMember.id + "> changed their stream name to: " + newMember.presence.game.name);
-			} else {
-				//A new stream has started
-				bot.channels.get("585613596134735874").send("<@!" + newMember.id + "> is now live! \n" + newMember.nickname + ": " + newMember.presence.game.name);
-			}
-		} else {
-			//state the status of the user
-			console.log(generalStatus);
-		}
-	}
+	const generalStatus = newPresence.user.username + " is now " + newPresence.status;
+	console.log(generalStatus);
 
 })
 
 //Add and removes a role that allows the user to type in vc-text
-bot.on("voiceStateUpdate", (oldMember,newMember) => {
-	if (newMember.voiceChannel == null) {
-		console.log(newMember.displayName + " left VC.")
-		newMember.removeRole('640311067485929476').catch(console.error)
+bot.on("voiceStateUpdate", (oldPresence,newPresence) => {
+	if (newPresence.voiceChannel == null) {
+		console.log(newPresence.displayName + " left VC.")
+		newPresence.removeRole('640311067485929476').catch(console.error)
 	} else {
-		console.log(newMember.displayName + " is in VC.")
-		newMember.addRole('640311067485929476').catch(console.error)
+		console.log(newPresence.displayName + " is in VC.")
+		newPresence.addRole('640311067485929476').catch(console.error)
 	}
 })
 

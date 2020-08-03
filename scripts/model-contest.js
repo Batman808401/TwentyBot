@@ -35,9 +35,10 @@ class Contest {
 			}
 		}
 	}
-	setUserSubmit(userId, messageId) {
+	setUserSubmit(userId, messageId, url) {
 		let contestant = this.getUser(userId);
 		contestant.setSubmission(messageId);
+		contestant.setSubmissionURL(url);
 	}
 	getUser(userId) {
 		for (let contestant of this.contestants) {
@@ -45,6 +46,9 @@ class Contest {
 				return contestant
 			}
 		}
+	}
+	getUsers() {
+		return this.contestants;
 	}
 }
 

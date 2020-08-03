@@ -4,6 +4,7 @@ class Contestant {
 		this.id = "";
 		this.votes = 0;
 		this.submission = "";
+		this.submissionURL = "";
 	}
 	setVote(votes) {
 		this.votes = votes;
@@ -28,6 +29,12 @@ class Contestant {
 	}
 	id() {
 		return this.id;
+	}
+	setSubmissionURL(url) {
+		this.setSubmissionURL(url);
+	}
+	getSubmissionURL() {
+		return this.submissionURL;
 	}
 }
 

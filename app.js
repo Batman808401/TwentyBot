@@ -50,8 +50,16 @@ bot.on('message', msg => {
 			case 'mimic':
 				spamChannel.send(attribute);
 				break;
+			default:
+				if (msg.author.id != '184326588655992832') {
+					spamChannel.send(`"${msg}" is not a valid command`)
+				}
+		}
+	}
+	if (origMsg[0] == "!" && msg.author.id == '184326588655992832') {
+		switch (cmd) {
 			case 'add':
-				/*const addToContest = async () => {
+				const addToContest = async () => {
 					let user = await bot.users.fetch(attribute).catch(e => {
 						return null;
 					});
@@ -63,22 +71,19 @@ bot.on('message', msg => {
 						msg.delete({timeout: 1000});
 					}
 				}
-				addToContest();*/
-
-				const addToContest = async () => {
-					let user = await bot.users.fetch(attribute).catch(e => {
-						return null;
-					});
-					if (user === null) {
-						spamChannel.send(`"${attribute}" is not a user`);
-					} else {
-						return bot.users.resolve(user);
-					}
+				addToContest();
+				break;
+			case 'contestants':
+				let users = modelContest.getUsers();
+				let temp = '';
+				for (let user of users) {
+					temp += `${user.name} `
 				}
-				console.log(addToContest());
+				spamChannel.send(temp);
 				break;
 			default:
 				spamChannel.send(`"${msg}" is not a valid command`)
+				break;
 		}
 	}
 

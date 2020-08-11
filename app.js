@@ -44,6 +44,47 @@ bot.on('message', msg => {
 
 	const spamChannel = bot.channels.cache.get('511380337993973775');
 
+	if (msg.channel.type == "dm") {
+		//console.log(Array.from(msg.attachments.values())[0].proxyURL)
+		//if (Array.from(msg.attachments.values())[0] != undefined) {
+
+		//}
+		if (origMsg[0] == "!" && msg.author.id == '184326588655992832') {
+			switch (cmd) {
+				case 'add':
+					const addToContest = async () => {
+						let user = await bot.users.fetch(attribute).catch(e => {
+							return null;
+						});
+						if (user === null) {
+							spamChannel.send(`"${attribute}" is not a user`);
+						} else {
+							modelContest.addContestant(user.username, user.id);
+							spamChannel.send(`${user.username} has been added to the contest`);
+							//msg.delete({timeout: 1000});
+						}
+					}
+					addToContest();
+					break;
+				case 'contestants':
+					let users = modelContest.getUsers();
+					/*let temp = '';
+					for (let user of users) {
+						temp += `${user.name} `
+					}*/
+					spamChannel.send(JSON.stringify(users));
+					break;
+				case 'submit':
+					const url = attribute.substr(attribute.indexOf(' ')+1);
+					const id = attribute.split(' ')[0];
+					modelContest.setUserSubmitURL(id, url);
+					break;
+				default:
+					//spamChannel.send(`"${cmd}" is not a valid command`)
+					break;
+			}
+		}
+	} else 
 	//check for a command and if the command is from a human
 	if (origMsg[0] == "!" && !msg.author.bot) {
 		switch (cmd) {
@@ -54,41 +95,6 @@ bot.on('message', msg => {
 				if (msg.author.id != '184326588655992832') {
 					spamChannel.send(`"${msg}" is not a valid command`)
 				}
-		}
-	}
-	if (origMsg[0] == "!" && msg.author.id == '184326588655992832') {
-		switch (cmd) {
-			case 'add':
-				const addToContest = async () => {
-					let user = await bot.users.fetch(attribute).catch(e => {
-						return null;
-					});
-					if (user === null) {
-						spamChannel.send(`"${attribute}" is not a user`);
-					} else {
-						modelContest.addContestant(user.username, user.id);
-						spamChannel.send(`${user.username} has been added to the contest`);
-						msg.delete({timeout: 1000});
-					}
-				}
-				addToContest();
-				break;
-			case 'contestants':
-				let users = modelContest.getUsers();
-				/*let temp = '';
-				for (let user of users) {
-					temp += `${user.name} `
-				}*/
-				spamChannel.send(JSON.stringify(users));
-				break;
-			case 'submit':
-				const url = attribute.substr(attribute.indexOf(' ')+1);
-				const id = attribute.split(' ')[0];
-				modelContest.setUserSubmitURL(id, url);
-				break;
-			default:
-				spamChannel.send(`"${cmd}" is not a valid command`)
-				break;
 		}
 	}
 

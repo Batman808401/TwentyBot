@@ -44,11 +44,15 @@ bot.on('message', msg => {
 
 	const spamChannel = bot.channels.cache.get('511380337993973775');
 
+	let submission = '';
+
 	if (msg.channel.type == "dm") {
 		//console.log(Array.from(msg.attachments.values())[0].proxyURL)
-		//if (Array.from(msg.attachments.values())[0] != undefined) {
-
-		//}
+		if (Array.from(msg.attachments.values())[0] != undefined) {
+			submission = Array.from(msg.attachments.values())[0].url;
+		} else {
+			console.log('no attachments');
+		}
 		if (origMsg[0] == "!" && msg.author.id == '184326588655992832') {
 			switch (cmd) {
 				case 'add':
@@ -75,10 +79,12 @@ bot.on('message', msg => {
 					spamChannel.send(JSON.stringify(users));
 					break;
 				case 'submit':
-					const url = attribute.substr(attribute.indexOf(' ')+1);
+					//const url = attribute.substr(attribute.indexOf(' ')+1);
 					const id = attribute.split(' ')[0];
-					modelContest.setUserSubmitURL(id, url);
+					modelContest.setUserSubmitURL(id, submission);
 					break;
+				case 'image':
+					spamChannel.send({files: [attribute]})//.then(console.log).catch(console.error)
 				default:
 					//spamChannel.send(`"${cmd}" is not a valid command`)
 					break;
@@ -89,7 +95,7 @@ bot.on('message', msg => {
 	if (origMsg[0] == "!" && !msg.author.bot) {
 		switch (cmd) {
 			case 'mimic':
-				spamChannel.send(attribute);
+				spamChannel.send(attribute).then((message) => {console.log(message.id)}).catch(console.error);
 				break;
 			default:
 				if (msg.author.id != '184326588655992832') {

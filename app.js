@@ -72,11 +72,22 @@ bot.on('message', msg => {
 					break;
 				case 'contestants':
 					let users = modelContest.getUsers();
-					/*let temp = '';
+					let i = 1;
+					let temp = '';
 					for (let user of users) {
-						temp += `${user.name} `
-					}*/
-					spamChannel.send(JSON.stringify(users));
+						//temp += `${user.name} `
+						//console.log(user)
+						spamChannel.send({
+							files: [user.submissionURL],
+							content: `Contestant ${i}`
+						}).then( (message) => {
+							modelContest.setUserSubmit(user.id, message.id)
+							//react to the message
+							message.react('⭐')
+						}).catch(console.error)
+						i++
+					}
+					//spamChannel.send(JSON.stringify(users));
 					break;
 				case 'submit':
 					//const url = attribute.substr(attribute.indexOf(' ')+1);
@@ -84,7 +95,10 @@ bot.on('message', msg => {
 					modelContest.setUserSubmitURL(id, submission);
 					break;
 				case 'image':
-					spamChannel.send({files: [attribute]})//.then(console.log).catch(console.error)
+					spamChannel.send({
+						files: [attribute],
+						content: msg.author.username
+					}).then((message) => {message.react('⭐')}).catch(console.error)
 				default:
 					//spamChannel.send(`"${cmd}" is not a valid command`)
 					break;

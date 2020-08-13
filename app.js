@@ -42,8 +42,11 @@ bot.on('message', msg => {
 	const command = origMsg.split(' ')[0].toLowerCase();
 	const cmd = command.substr(command.indexOf("!")+1);
 
+	//channels
 	const spamChannel = bot.channels.cache.get('511380337993973775');
 
+	//model contest vars
+	let users = modelContest.getUsers();
 	let submission = '';
 
 	if (msg.channel.type == "dm") {
@@ -71,7 +74,6 @@ bot.on('message', msg => {
 					addToContest();
 					break;
 				case 'contestants':
-					let users = modelContest.getUsers();
 					let i = 1;
 					let temp = '';
 					for (let user of users) {
@@ -97,14 +99,25 @@ bot.on('message', msg => {
 					spamChannel.send({
 						files: [attribute],
 						content: msg.author.username
-					}).then((message) => {message.react('⭐')}).catch(console.error)
-					break;
-				case 'message': 
-					let msgID = attribute;
-					spamChannel.messages.fetch(attribute).then(
+					}).then(
 						(message) => {
-							console.log(message.reactions.resolve('⭐').count)
-						})
+							message.react('⭐')
+						}
+					).catch(console.error)
+					break;
+				case 'vote': 
+					for (let user of users) {
+						spamChannel.messages.fetch(user.submission).then(
+							(message) => {
+								modelContest.enterVote(message.reactions.resolve('⭐').count, message.id)
+								//console.log(message.reactions.resolve('⭐').count)
+							}
+						).catch(console.error)
+						console.log(user)
+					}
+					break;
+				case 'judge':
+
 					break;
 				default:
 					//spamChannel.send(`"${cmd}" is not a valid command`)

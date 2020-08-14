@@ -54,7 +54,26 @@ bot.on('message', msg => {
 		if (Array.from(msg.attachments.values())[0] != undefined) {
 			submission = Array.from(msg.attachments.values())[0].url;
 		} else {
-			console.log('no attachments');
+			//console.log('no attachments');
+		}
+		if (origMsg[0] == '!') {
+			switch (cmd) {
+				case 'submit':
+					const id = msg.author.id;
+					if (modelContest.setUserSubmitURL(id, submission)) {
+						console.log('submission successful')
+						msg.reply(`Your submission has been accepted.`)
+					} else {
+						console.log('submission failed')
+						msg.reply(`You're not in the contest!`)
+					}
+					break;
+				default:
+					if (msg.author.id != '184326588655992832') {
+						msg.reply(`"${cmd}" is not a command`)
+					}
+					break;
+			}
 		}
 		if (origMsg[0] == "!" && msg.author.id == '184326588655992832') {
 			switch (cmd) {
@@ -92,13 +111,23 @@ bot.on('message', msg => {
 					}
 					break;
 				case 'submit':
-					const id = attribute;
-					if (modelContest.setUserSubmitURL(id, submission)) {
+					const customId = attribute;
+					if (customId != '!submit') {
+						if (modelContest.setUserSubmitURL(customId, submission)) {
+							console.log('submission successful')
+						} else {
+							console.log('submission failed')
+							msg.reply(`You're not in the contest!`)
+						}
+					} else {
+						console.log('using production submit...')
+					}
+					/*if (modelContest.setUserSubmitURL(id, submission)) {
 						console.log('submission successful')
 					} else {
 						console.log('submission failed')
 						msg.reply(`You're not in the contest!`)
-					}
+					}*/
 					break;
 				case 'image':
 					spamChannel.send({
@@ -136,7 +165,15 @@ bot.on('message', msg => {
 					//setVotes().then(console.log(users));
 					break;
 				case 'judge':
-					console.log(modelContest.getWinner())
+					let winner = modelContest.getWinner()
+					for (let user of users) {
+						spamChannel.messages.fetch(user.submission).then(
+							(message) => {
+								message.edit(user.name)
+							}
+						).catch(console.error)
+					}
+					spamChannel.send(`Congratulations to:\n${winner.join('\n')}\nYou won the contest!`)
 					break;
 				default:
 					//spamChannel.send(`"${cmd}" is not a valid command`)

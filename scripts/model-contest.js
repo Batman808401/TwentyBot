@@ -12,22 +12,27 @@ class Contest {
 		this.contestants.push(contestant);
 		console.log(contestant);
 	}
+
 	getWinner() {
+		this.winner = [];
 		let highestVotes = this.getHighestVote();
 		for (let contestant of this.contestants) {
-			if (contestant.vote == highestVotes) {
-				this.winner.push(contestant.name())
+			if (contestant.votes == highestVotes) {
+				this.winner.push(contestant.name)
 			}
 		}
+		console.log(`highest vote is ${highestVotes}`)
 		return this.winner
 	}
 	getHighestVote() {
 		let votes = [];
 		for (let contestant of this.contestants) {
-			votes.push(contestant.vote())
+			votes.push(contestant.votes)
 		}
-		return Math.max(votes);
+		console.log('getting highest vote...')
+		return Math.max(...votes);
 	}
+
 	enterVote(count, messageId) {
 		for (let contestant of this.contestants) {
 			if (contestant.submission == messageId) {
@@ -41,7 +46,12 @@ class Contest {
 	}
 	setUserSubmitURL(userId, url) {
 		let contestant = this.getUser(userId);
+		if (contestant == undefined) {
+			console.log('DNE')
+			return false
+		}
 		contestant.setSubmissionURL(url);
+		return true
 	}
 	getUser(userId) {
 		for (let contestant of this.contestants) {

@@ -93,7 +93,12 @@ bot.on('message', msg => {
 					break;
 				case 'submit':
 					const id = attribute;
-					modelContest.setUserSubmitURL(id, submission);
+					if (modelContest.setUserSubmitURL(id, submission)) {
+						console.log('submission successful')
+					} else {
+						console.log('submission failed')
+						msg.reply(`You're not in the contest!`)
+					}
 					break;
 				case 'image':
 					spamChannel.send({
@@ -106,6 +111,20 @@ bot.on('message', msg => {
 					).catch(console.error)
 					break;
 				case 'vote': 
+					/*const setVotes = async () => {
+						const voteSetter = new Promise(() => {
+							for (let user of users) {
+								spamChannel.messages.fetch(user.submission).then(
+									(message) => {
+										modelContest.enterVote(message.reactions.resolve('⭐').count, message.id)
+										//console.log(message.reactions.resolve('⭐').count)
+									}
+								).catch(console.error)
+							}
+						})
+						let vote = await voteSetter().then(console.log(users)).catch(console.log('there was a problem setting votes'))
+					}
+					setVotes()*/
 					for (let user of users) {
 						spamChannel.messages.fetch(user.submission).then(
 							(message) => {
@@ -113,11 +132,11 @@ bot.on('message', msg => {
 								//console.log(message.reactions.resolve('⭐').count)
 							}
 						).catch(console.error)
-						console.log(user)
 					}
+					//setVotes().then(console.log(users));
 					break;
 				case 'judge':
-
+					console.log(modelContest.getWinner())
 					break;
 				default:
 					//spamChannel.send(`"${cmd}" is not a valid command`)
